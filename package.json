@@ -1,0 +1,7 @@
+{
+  "name": "email-checker",
+  "version": "1.0.0",
+  "dependencies": {
+    "deep-email-validator": "^0.1.21"
+  }
+}
