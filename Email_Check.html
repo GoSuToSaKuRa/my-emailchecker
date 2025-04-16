@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Email Checker</title>
+</head>
+<body>
+  <h1>Email Checker</h1>
+  <input type="email" id="email" placeholder="Enter email address">
+  <button id="check">Check</button>
+  <p id="result"></p>
+
+  <script>
+    document.getElementById('check').addEventListener('click', async () => {
+      const email = document.getElementById('email').value;
+      if (!email) {
+        document.getElementById('result').textContent = 'Please enter an email address';
+        return;
+      }
+      // Basic format validation
+      if (!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(email)) {
+        document.getElementById('result').textContent = 'Invalid email format';
+        return;
+      }
+      document.getElementById('result').textContent = 'Checking...';
+      try {
+        const response = await fetch('/api/verify', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ email })
+        });
+        const data = await response.json();
+        if (data.error) {
+          document.getElementById('result').textContent = data.error;
+        } else if (data.valid) {
+          document.getElementById('result').textContent = 'Email is valid';
+        } else {
+          document.getElementById('result').textContent = `Email is invalid: ${data.reason}`;
+        }
+      } catch (error) {
+        document.getElementById('result').textContent = 'Error checking email';
+      }
+    });
+  </script>
+</body>
+</html>
